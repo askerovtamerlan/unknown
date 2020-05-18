@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div v-show="showLoginPopup" class="login-container">
+        <div class="window-login">
+          <img
+            src="./src/icons/login_close.svg"
+            @click="showLoginScreen()"
+            alt=""
+          />
+          <div>Вход</div>
+          <div class="login_authorization-type">
+            <div>ТЕЛЕФОН</div>
+            <div>E-MAIL</div>
+          </div>
+          <div class="login_authorization_description">
+            На указанный номер телефона будет выслан код для авторизации
+          </div>
+          <div class="login_input">+7 ( ___ ) ___ - __ - __</div>
+          <div class="login_button">Отправить</div>
+          <div class="login_button_description">
+            Авторизуясь, вы соглашаетесь с
+            <span>Правилами и Политикой конфиденциальности</span>
+          </div>
+          <div class="login_registration">
+            <span>Еще нет аккаунта?</span>
+            <span>Зарегистрируйтесь</span>
+          </div>
+        </div>
+      </div>
+      <header>
+        <ul>
+          <li @click="changeTown()">
+            <!-- dropdown town menu/selector -->
+            <ul v-show="showTownSelector" class="dropdown-towns">
+              <li
+                v-for="(town,index) in dropdownTownList"
+                v-bind:key="index"
+                @click.stop="changeTown(town)"
+              >
+                {{ town }}
+              </li>
+            </ul>
+
+            <img
+              src="./src/icons/header-location.svg"
+              alt="icon-location"
+            /><span>{{ location }}</span>
+            <img
+              src="./src/icons/header-location_arrow.svg"
+              alt="icon-location"
+            />
+          </li>
+          <li>
+            <img src="./src/icons/header-phone.svg" alt="icon-phone" /><span
+              >8 (800) 123 45 67</span
+            >
+          </li>
+          <li @click="showLoginScreen()">
+            <img src="./src/icons/header-enter.png" alt="icon-enter" /><span
+              >Вход</span
+            >
+          </li>
+          <li>
+            <img
+              src="./src/icons/header-registration.svg"
+              alt="icon-registration"
+            /><span>Регистрация</span>
+          </li>
+        </ul>
+      </header>
+      <div class="location-section" v-if="locationBlockVisibity">
+        <!-- <h1>TEST</h1> -->
+        <span>Ваш город — {{ location }}?</span
+        ><span @click="changeTown(location)">Да</span
+        ><span @click="changeTown()">Изменить город</span>
+      </div>
+      <main>
+        <div class="jumbotron">
+          <div class="jumbotron-header">
+            <h1>Онлайн запись в сфере услуг</h1>
+            <p>#просто_быстро_для_вас</p>
+          </div>
+          <div class="jumbotron-menu">
+            <input
+              v-model="name"
+              placeholder="Поиск компаний и услуг"
+              type="text"
+            />
+            <input
+              readonly
+              placeholder="Доп. параметры"
+              type="text"
+              @click="showOptions()"
+            />
+
+            <div v-show="showOptionsSelector" class="dropdown-options">
+              <div class="options_switchers">
+                <label
+                  v-for="filterName in Object.keys(options.filters)"
+                  class="switch"
+                >
+                  <input @click="changeFilters(filterName)" type="checkbox" />
+                  <span class="slider round"></span>
+                  <span class="switchers_name">{{ filterName }}</span>
+                </label>
+              </div>
+
+              <div class="options_category">
+                <div class="category">
+                  <img
+                    id="icon-location"
+                    src="./src/icons/location_on.svg"
+                    @click="changeCategory('location')"
+                  />
+                  <div class="location indicator-container"></div>
+                  <div class="text-container">Локация</div>
+                </div>
+
+                <div class="category">
+                  <img
+                    id="icon-data"
+                    src="./src/icons/data_off.svg"
+                    @click="changeCategory('data')"
+                  />
+                  <div class="data indicator-container"></div>
+                  <div class="text-container">Дата и время</div>
+                </div>
+
+                <div class="category">
+                  <img
+                    id="icon-balance"
+                    src="./src/icons/balance_off.svg"
+                    @click="changeCategory('balance')"
+                  />
+                  <div class="balance indicator-container"></div>
+                  <div class="text-container">Цена</div>
+                </div>
+              </div>
+
+              <div v-show="options.triggers.location" class="options_location">
+                <input placeholder="Не определена" type="text" />
+                <input placeholder="0.5 км" type="text" />
+              </div>
+
+              <div v-show="options.triggers.data" class="options_data">
+                <input placeholder="ПН, сегодня" type="text" />
+                <div class="data_radio">
+                  <label class="container"
+                    ><span class="text">В ближайщее время</span>
+                    <input type="radio" checked="checked" name="radio" />
+                    <span class="checkmark"></span>
+                  </label>
+                  <label class="container">
+                    <span class="text">В указанное время</span>
+                    <input type="radio" name="radio" />
+                    <span class="checkmark"></span>
+                  </label>
+                </div>
+                <span>Длительность услуги</span>
+                <input placeholder="30 мин" type="text" />
+              </div>
+
+              <div v-show="options.triggers.balance" class="options_balance">
+                <input value="100 ₽" type="text" />
+                <input value="1 000 000 ₽" type="text" />
+
+                <!-- <div class="slidecontainer">
+                  <input
+                    type="range"
+                    min="100"
+                    max="1000000"
+                    value="50"
+                    class="slider"
+                    id="myRange"
+                  />
+                </div> -->
+                <!-- <div class="balance-radio"> -->
+                <label class="container"
+                  ><span class="text">Цена по возрастанию</span>
+                  <input type="radio" checked="checked" name="radio" />
+                  <span class="checkmark"></span>
+                </label>
+
+                <label class="container">
+                  <span class="text">Цена по убыванию</span>
+                  <input type="radio" name="radio" />
+                  <span class="checkmark"></span>
+                </label>
+                <!-- </div> -->
+              </div>
+
+              <!-- <div class="options_location"></div> -->
+
+              <div class="options_control">
+                <span>СБРОСИТЬ</span>
+                <span>НАЙТИ</span>
+              </div>
+            </div>
+
+            <input
+              readonly
+              type="text"
+              placeholder="Рубрика"
+              v-model="section"
+              @click="changeSection()"
+            />
+
+            <ul v-show="showSectionSelector" class="dropdown-section">
+              <li
+                v-for="(element,index) in dropdownSectionList"
+                v-bind:key="index"
+                @click.stop="changeSection(element)"
+              >
+                {{ element }}
+              </li>
+            </ul>
+
+            <input
+              readonly
+              type="text"
+              placeholder="Подрубрика"
+              v-model="subSection"
+              @click="changeSubSection()"
+            />
+
+            <ul v-show="showSubSectionSelector" class="dropdown-subsection">
+              <li
+                v-for="(element, index) in dropdownSubSectionList"
+                v-bind:key="index"
+                @click.stop="changeSubSection(element)"
+              >
+                {{ element }}
+              </li>
+            </ul>
+
+            <button>НАЙТИ</button>
+            <button>НА КАРТЕ</button>
+          </div>
+          <div class="jumbotron-icons">
+            <div class="icon-container">
+              <img src="./src/medium-icons/1.svg" alt="" />
+              <span>90 000</span>
+              <span>компаний</span>
+            </div>
+            <div class="icon-container">
+              <img src="./src/medium-icons/2.svg" alt="" />
+              <span>560 000</span>
+              <span>специалистов и мастеров</span>
+            </div>
+            <div class="icon-container">
+              <img src="./src/medium-icons/3.svg" alt="" />
+              <span>2 млн</span>
+              <span>клиентов</span>
+            </div>
+            <div class="icon-container">
+              <img src="./src/medium-icons/4.svg" alt="" />
+              <span>10 000</span>
+              <span>записей ежедневно</span>
+            </div>
+            <div class="icon-container">
+              <img src="./src/medium-icons/5.svg" alt="" />
+              <span>45 000</span>
+              <span>отзывов</span>
+            </div>
+          </div>
+        </div>
+        <section class="famous-sections">
+          <h2>Популярные рубрики</h2>
+          <span>Показать все</span>
+          <label class="switch">
+            <input type="checkbox" />
+            <span class="slider round"></span>
+          </label>
+          <div class="sections_container">
+            <div class="section">
+              <div class="section_circle"></div>
+              <div>Автосервис</div>
+            </div>
+            <div class="section">
+              <div class="section_circle"></div>
+              <div>Безопасность</div>
+            </div>
+            <div class="section">
+              <div class="section_circle"></div>
+              <div>Жилье и дом</div>
+            </div>
+            <div class="section">
+              <div class="section_circle"></div>
+              <div>Бизнес</div>
+            </div>
+            <div class="section">
+              <div class="section_circle"></div>
+              <div>Еда и напитки</div>
+            </div>
+            <div class="section">
+              <div class="section_circle"></div>
+              <div>Здоровье и фитнес</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+  <script src="main.js"></script>
+</html>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect width="24" height="24" fill="none"/>
+    </clipPath>
+  </defs>
+  <g id="ic_exit_top" clip-path="url(#clip-path)">
+    <g id="ic_exit_top-2" data-name="ic_exit_top" transform="translate(-1017 -12)">
+      <path id="Path_" data-name="Path " d="M0,0H24V24H0Z" transform="translate(1017 12)" fill="none"/>
+      <path id="ic" d="M19554-1379a9.923,9.923,0,0,1-7.068-2.929A9.943,9.943,0,0,1,19544-1389a9.936,9.936,0,0,1,2.928-7.07A9.927,9.927,0,0,1,19554-1399a9.939,9.939,0,0,1,7.072,2.927,9.928,9.928,0,0,1,2.93,7.07,9.935,9.935,0,0,1-2.93,7.072A9.935,9.935,0,0,1,19554-1379Zm2.6-9-2.293,2.588,1.252,1.414,4.443-5-4.443-5-1.252,1.409,2.293,2.592h-8.6v2Z" transform="translate(-18525 1413)" fill="#4bbac5"/>
+    </g>
+  </g>
+</svg>
