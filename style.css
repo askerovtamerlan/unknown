@@ -15,6 +15,7 @@
 body {
   margin: 0;
   font-family: "Roboto", sans-serif;
+  min-width: 1366px;
 }
 
 ul {
@@ -23,7 +24,7 @@ ul {
 
 header {
   top: 0px;
-  width: 100%;
+  min-width: 1366px;
   height: calc(var(--size) * 2);
   background-color: #263548;
   position: sticky;
